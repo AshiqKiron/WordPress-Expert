@@ -2,6 +2,10 @@
 
 >  A production-grade Custom GPT that provides expert WordPress guidance, secure plugin/theme scaffolding, and live API integrations—trained exclusively on official WordPress.org documentation.
 
+### Screenshot one - Custom GPT app screenshot ![Screenshot](screenshot.png)
+### Screenshot two - App logo ![App Logo](.png)
+
+
  **Live GPT**: https://chatgpt.com/g/g-6a11c946898881919ef3ce634a5512ab-wp-expert-help  
 📦 **License**: MIT (config) / CC0 (docs) / GPLv2+ (code)  
 🛡️ **Security-First**: All generated code includes nonces, sanitization, capability checks, and ABSPATH guards
