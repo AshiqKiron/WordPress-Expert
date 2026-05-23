@@ -1,0 +1,71 @@
+openapi: 3.1.0
+info:
+  title: WordPress.org Plugin Directory API
+  description: Query the official WordPress plugin repository for metadata, search, and version info.
+  version: 1.2.0
+servers:
+  - url: https://api.wordpress.org/plugins/info/1.2/
+paths:
+  /:
+    get:
+      summary: Query plugin information
+      operationId: queryPlugin
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [query_plugins, plugin_information, hot_tags, feature_list]
+        - name: request[search]
+          in: query
+          schema: { type: string }
+        - name: request[slug]
+          in: query
+          schema: { type: string }
+        - name: request[author]
+          in: query
+          schema: { type: string }
+        - name: request[page]
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: request[per_page]
+          in: query
+          schema: { type: integer, default: 23, maximum: 100 }
+        - name: request[fields][sections]
+          in: query
+          schema: { type: boolean, default: false }
+        - name: request[fields][ratings]
+          in: query
+          schema: { type: boolean, default: true }
+        - name: request[fields][active_installs]
+          in: query
+          schema: { type: boolean, default: false }
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: object
+                    properties:
+                      page: { type: integer }
+                      pages: { type: integer }
+                      results: { type: integer }
+                  plugins:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug: { type: string }
+                        name: { type: string }
+                        version: { type: string }
+                        rating: { type: number }
+                        active_installs: { type: integer }
+                        requires: { type: string }
+                        tested: { type: string }
+        '400':
+          description: Invalid parameters
