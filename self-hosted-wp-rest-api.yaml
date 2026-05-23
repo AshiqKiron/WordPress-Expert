@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: Self-Hosted WordPress REST API
+  description: Manage content on a user's WordPress site via /wp-json/wp/v2/. Requires authentication for write operations.
+  version: 2.0.0
+servers:
+  - url: https://{site}/wp-json/wp/v2
+    variables:
+      site:
+        default: example.com
+        description: Your WordPress site domain
+paths:
+  /posts:
+    get:
+      summary: List posts
+      operationId: listPosts
+      parameters:
+        - name: per_page
+          in: query
+          schema: { type: integer, default: 10, maximum: 100 }
+        - name: status
+          in: query
+          schema: { type: string, enum: [publish, draft, pending, private] }
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: integer }
+                    title: { type: object, properties: { rendered: { type: string } } }
+                    status: { type: string }
+                    link: { type: string, format: uri }
+    post:
+      summary: Create post
+      operationId: createPost
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                content: { type: string }
+                status: { type: string, enum: [draft, publish, pending] }
+      responses:
+        '201':
+          description: Post created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  title: { type: object, properties: { rendered: { type: string } } }
+                  link: { type: string, format: uri }
+  /posts/{id}:
+    get:
+      summary: Get single post
+      operationId: getPost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Single post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  title: { type: object, properties: { rendered: { type: string } } }
+                  content: { type: object, properties: { rendered: { type: string } } }
+                  status: { type: string }
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use Application Passwords: username + generated app password
